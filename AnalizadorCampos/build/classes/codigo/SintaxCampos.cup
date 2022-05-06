@@ -1,0 +1,117 @@
+package codigo;
+
+import java_cup.runtime.Symbol;
+
+parser code
+{:
+    private Symbol s;
+    
+    public void syntax_error(Symbol s){
+        this.s = s;
+    }
+
+    public Symbol getS(){
+        return this.s;
+}
+:};
+
+terminal OPERADORARITSuma,
+OPERADORARITResta,
+OPERADORARITDivicion,
+OPERADORARITMultip,
+ASIGNACION,
+OperadorRacional,
+OperadorBooleano,
+OperadorAtribucion,
+OperadorIncremento,
+SIMBOLOAGRUPLlaveAbir,
+SIMBOLOAGRUPLlaveCerr,
+SIMBOLOAGRUPCorchAbir,
+SIMBOLOAGRUPCorchCerr,
+SIMBOLOAGRUPParenAbir,
+SIMBOLOAGRUPParenCerr,
+Linea,
+Comillas,
+COMA,
+FinalLinea,
+PalabReservIF,
+PalabReservELSE,
+PalabReservELSEIF,
+PalabReservFOR,
+PalabReservDO,
+PalabReservWHILE,
+PalabReservIMPRIMIR,
+PalabReservINT,
+Tipodedato,
+PalabReservString,
+CADENA,
+NUMERO,
+IDENTIFICADOR,
+CADENALetrasYNumeros,
+CADENAGmail,
+CADENALetrasYNumerosYsimbolos,
+CADENALetrasYNumerosRep,
+Main,
+ERROR;
+non terminal INICIO, SENTENCIA, DECLARACION, DECLARACION_FOR, IF, IF_ELSE,
+    WHILE, DO_WHILE, FOR, SENTENCIA_BOOLEANA, SENTENCIA_FOR;
+
+start with INICIO;
+
+INICIO ::= 
+    PalabReservINT SIMBOLOAGRUPParenAbir SIMBOLOAGRUPParenCerr SIMBOLOAGRUPLlaveAbir SENTENCIA SIMBOLOAGRUPLlaveCerr
+;
+
+SENTENCIA ::= 
+    SENTENCIA DECLARACION |
+    DECLARACION |
+    SENTENCIA IF | 
+    IF |
+    SENTENCIA IF_ELSE |
+    IF_ELSE |
+    SENTENCIA WHILE |
+    WHILE |
+    SENTENCIA DO_WHILE
+    DO_WHILE |
+    SENTENCIA FOR |
+    FOR
+;
+DECLARACION ::= 
+    PalabReservINT IDENTIFICADOR FinalLinea | 
+    PalabReservINT IDENTIFICADOR ASIGNACION NUMERO FinalLinea |
+    Tipodedato IDENTIFICADOR FinalLinea | 
+    Tipodedato IDENTIFICADOR OPERADORARITSuma NUMERO FinalLinea |
+    Tipodedato IDENTIFICADOR ASIGNACION NUMERO FinalLinea |
+    Tipodedato IDENTIFICADOR OPERADORARITSuma FinalLinea |
+    PalabReservString IDENTIFICADOR OPERADORARITSuma Comillas Comillas FinalLinea |
+    PalabReservString IDENTIFICADOR ASIGNACION Comillas Comillas FinalLinea |
+    PalabReservString IDENTIFICADOR OPERADORARITSuma Comillas IDENTIFICADOR Comillas FinalLinea |
+    PalabReservString IDENTIFICADOR ASIGNACION Comillas IDENTIFICADOR Comillas FinalLinea
+;
+IF ::= PalabReservIF SIMBOLOAGRUPParenAbir SENTENCIA_BOOLEANA SIMBOLOAGRUPParenCerr SIMBOLOAGRUPLlaveAbir SENTENCIA SIMBOLOAGRUPLlaveCerr
+;
+SENTENCIA_BOOLEANA ::= 
+    OperadorBooleano | 
+    IDENTIFICADOR OperadorRacional OperadorBooleano |
+    IDENTIFICADOR OperadorRacional NUMERO |
+    IDENTIFICADOR OperadorRacional IDENTIFICADOR |
+    IDENTIFICADOR OperadorRacional Comillas Comillas |
+    IDENTIFICADOR OperadorRacional Comillas IDENTIFICADOR Comillas
+;
+IF_ELSE ::= PalabReservIF SIMBOLOAGRUPParenAbir SENTENCIA_BOOLEANA SIMBOLOAGRUPParenCerr SIMBOLOAGRUPLlaveAbir SENTENCIA SIMBOLOAGRUPLlaveCerr PalabReservELSE SIMBOLOAGRUPLlaveAbir SENTENCIA SIMBOLOAGRUPLlaveCerr
+;
+WHILE ::= PalabReservWHILE SIMBOLOAGRUPParenAbir SENTENCIA_BOOLEANA SIMBOLOAGRUPParenCerr SIMBOLOAGRUPLlaveAbir SENTENCIA SIMBOLOAGRUPLlaveCerr
+;
+DO_WHILE ::= PalabReservDO SIMBOLOAGRUPLlaveAbir SENTENCIA SIMBOLOAGRUPLlaveCerr PalabReservWHILE SIMBOLOAGRUPParenAbir SENTENCIA_BOOLEANA SIMBOLOAGRUPParenCerr FinalLinea
+;
+FOR ::= PalabReservFOR SIMBOLOAGRUPParenAbir SENTENCIA_FOR SIMBOLOAGRUPParenCerr SIMBOLOAGRUPLlaveAbir SENTENCIA SIMBOLOAGRUPLlaveCerr
+;
+SENTENCIA_FOR ::=
+    Tipodedato IDENTIFICADOR ASIGNACION NUMERO FinalLinea SENTENCIA_BOOLEANA FinalLinea DECLARACION_FOR |
+    IDENTIFICADOR ASIGNACION NUMERO FinalLinea SENTENCIA_BOOLEANA FinalLinea DECLARACION_FOR
+;
+DECLARACION_FOR ::= 
+    IDENTIFICADOR OperadorAtribucion NUMERO |
+    IDENTIFICADOR OperadorIncremento | 
+    OperadorIncremento IDENTIFICADOR
+;
